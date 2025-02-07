@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -30,6 +30,9 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    await this.exists(id);
+
+    this.looger.log("Atualizando um usuário");
     return this.prisma.user.update({
       data: updateUserDto,
       where: {
@@ -39,6 +42,21 @@ export class UserService {
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} user`;
+    await this.exists(id);
+
+    this.looger.log("Deletando um usuário");
+    return this.prisma.user.delete({
+      where: {
+        id
+      }
+    });
+  }
+
+  async exists(id: number) {
+    const user = await this.findOne(id);
+    if (!user) {
+      this.looger.log("Aconteceu uma exceção");
+      throw new NotFoundException(`O usuário ${id} não existe`);
+    }
   }
 }
