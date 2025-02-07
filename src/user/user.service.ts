@@ -15,12 +15,18 @@ export class UserService {
     return this.prisma.user.create({ data: createUserDto });
   }
 
-   async findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    this.looger.log("Listando vários usuários");
+    return this.prisma.user.findMany();
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} user`;
+    this.looger.log("Listando um usuário");
+    return this.prisma.user.findUnique({
+      where: {
+        id
+      }
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
