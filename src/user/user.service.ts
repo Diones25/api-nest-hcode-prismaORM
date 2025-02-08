@@ -21,6 +21,8 @@ export class UserService {
   }
 
   async findOne(id: number) {
+    await this.exists(id);
+    
     this.looger.log("Listando um usuário");
     return this.prisma.user.findUnique({
       where: {
@@ -53,7 +55,12 @@ export class UserService {
   }
 
   async exists(id: number) {
-    const user = await this.findOne(id);
+    const user = await this.prisma.user.count({
+      where: {
+        id
+      }
+    });
+    
     if (!user) {
       this.looger.log("Aconteceu uma exceção");
       throw new NotFoundException(`O usuário ${id} não existe`);
