@@ -71,7 +71,15 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*.dto.ts",
+      "!**/*.module.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/src/decorators/",
+      "/src/interceptors/",
+      "/src/middlewares/",
+      "/src/prisma/"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
